@@ -1,0 +1,42 @@
+{
+  "name": "ridesync",
+  "version": "0.1.0",
+  "description": "DAW-like audio timeline editor for NoLimits 2 ride audio",
+  "author": "Pieter H.",
+  "productName": "RideSync",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable",
+    "portable": "electron-builder --win portable"
+  },
+  "build": {
+    "appId": "com.ridesync.editor",
+    "productName": "RideSync",
+    "asar": true,
+    "compression": "maximum",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "allowScripts": {
+    "electron@31.7.7": true
+  }
+}

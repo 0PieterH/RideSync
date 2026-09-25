@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RideSync — Reference Manual</title>
+<style>
+:root{
+  --bg:#0f1117; --panel:#151823; --panel2:#1b1f2c; --line:#2a3040;
+  --txt:#dfe4ee; --dim:#98a2b8; --accent:#7cc4ff; --accent2:#c08cff;
+  --code-bg:#0b0d13; --code-txt:#c9d3e6; --ok:#5adcb4; --warn:#ffcf7c; --maxw:920px;
+}
+body.light{
+  --bg:#f6f7fb; --panel:#ffffff; --panel2:#eef1f8; --line:#dde2ec;
+  --txt:#1c2230; --dim:#5d6a80; --accent:#3b6fe0; --code-bg:#0f1117; --code-txt:#dfe4ee;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  font-size:15.5px;line-height:1.7;-webkit-font-smoothing:antialiased}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;padding:12px 22px;
+  background:color-mix(in srgb,var(--bg) 82%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar .brand{font-weight:800;letter-spacing:.2px}
+.topbar .brand span{color:var(--accent)}
+.topbar .grow{flex:1}
+.tbtn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--txt);border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:290px 1fr;align-items:start;max-width:1400px;margin:0 auto}
+.toc{position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;padding:24px 18px 60px 24px;border-right:1px solid var(--line)}
+.toc h4{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.toc a{display:block;color:var(--dim);text-decoration:none;font-size:13.5px;padding:6px 10px;border-radius:8px;border-left:2px solid transparent}
+.toc a:hover{color:var(--txt);background:var(--panel)}
+.toc a.active{color:var(--txt);background:var(--panel);border-left-color:var(--accent);font-weight:600}
+.toc a.sub{padding-left:24px;font-size:12.5px}
+main{padding:30px 34px 120px;max-width:calc(var(--maxw) + 68px)}
+h1{font-size:32px;line-height:1.2;margin:6px 0 6px;letter-spacing:-.4px}
+h1+.lede{color:var(--dim);font-size:15px;margin-bottom:26px}
+h2{font-size:23px;margin:52px 0 14px;padding-top:14px;border-top:1px solid var(--line);letter-spacing:-.2px}
+h2:first-of-type{border-top:0;margin-top:20px}
+h3{font-size:17px;margin:30px 0 10px}
+h4{font-size:14.5px;margin:22px 0 8px;color:var(--dim)}
+p{margin:12px 0}
+a{color:var(--accent)}
+ul,ol{margin:12px 0;padding-left:26px}
+li{margin:6px 0}
+code{font-family:"Cascadia Code",Consolas,Menlo,monospace;font-size:.88em;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;color:var(--code-txt)}
+pre{background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;line-height:1.6}
+pre code{background:none;border:0;padding:0;color:var(--code-txt);font-size:12.5px}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:14px;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:9px 12px;vertical-align:top}
+thead th{background:var(--panel2);color:var(--txt);font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;text-align:left}
+tbody tr:nth-child(even){background:color-mix(in srgb,var(--panel) 60%,transparent)}
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:12px 16px;margin:16px 0;font-size:14.5px}
+.note.warn{border-left-color:var(--warn)}
+.note.ok{border-left-color:var(--ok)}
+.note .t{font-weight:700;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim);display:block;margin-bottom:2px}
+@media (max-width:1000px){.layout{grid-template-columns:1fr}.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:24px 20px 90px}}
+@media print{.topbar,.toc{display:none}.layout{display:block}main{max-width:none;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">RideSync <span>· Reference Manual</span></div>
+  <div class="grow"></div>
+  <button class="tbtn" id="themeBtn" title="Light / dark">◐</button>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc">
+    <h4>Contents</h4>
+    <a href="#s1">1 · Overview</a>
+    <a href="#s2">2 · The pieces</a>
+    <a href="#s3">3 · Core concepts</a>
+    <a href="#s4">4 · What plays in-game</a>
+    <a href="#s5">5 · Launch triggers</a>
+    <a href="#s6">6 · Behaviors</a>
+    <a href="#s7">7 · File formats</a>
+    <a href="#s8">8 · The editor</a>
+    <a href="#s9">9 · Volume automation</a>
+    <a href="#s10">10 · The engine</a>
+    <a href="#s11">11 · Workflows</a>
+    <a href="#s12">12 · Deployment</a>
+    <a href="#s13">13 · Troubleshooting</a>
+    <a href="#sa">A · Bin byte reference</a>
+    <a href="#sb">B · Limits &amp; defaults</a>
+  </nav>
+
+  <main>
+    <h1>RideSync — Reference Manual</h1>
+    <p class="lede">The technical companion to the User Guide: how the editor, the binary format, the engine script and the game fit together. For step-by-step usage, see the User Guide.</p>
+
+    <section id="s1">
+      <h2>1 · Overview</h2>
+      <p>NoLimits 2 can't play audio timed to a moving train on its own. RideSync provides it:</p>
+      <ul>
+        <li>A <strong>desktop editor</strong> (Electron app): tracks, clips, cues, sound triggers and settings.</li>
+        <li>A <strong>binary format</strong> (<code>timeline.bin</code>, version 7) that stores the whole timeline.</li>
+        <li>An <strong>engine script</strong> (<code>TimelineAudio.nlvm</code>) that reads <code>config/timeline.bin</code> at runtime and plays the right sounds per train.</li>
+      </ul>
+      <p>The editor authors; the <code>.bin</code> is the single source of truth the game reads; the engine script is a player that only changes when the format changes.</p>
+    </section>
+
+    <section id="s2">
+      <h2>2 · The pieces</h2>
+      <table>
+        <thead><tr><th>Piece</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td>Editor app</td><td>Author timelines, import/export, settings</td></tr>
+          <tr><td>Engine script (<code>TimelineAudio.java</code> → <code>.nlvm</code>)</td><td>The NoLimits 2 script that plays the timeline</td></tr>
+          <tr><td><code>timeline.bin</code></td><td>Versioned binary the engine reads</td></tr>
+          <tr><td><code>.nl2audio</code></td><td>Self-contained editor project (zip: JSON + audio)</td></tr>
+          <tr><td><code>.nl2script</code></td><td>Declares every audio file as an NL2 resource</td></tr>
+          <tr><td>Park <code>RideSync/</code> folder</td><td>Deployed script + audio + <code>config/timeline.bin</code></td></tr>
+        </tbody>
+      </table>
+      <p>The editor and the engine share the same writer/reader logic, so a file the editor produces loads in the engine and vice versa.</p>
+    </section>
+
+    <section id="s3">
+      <h2>3 · Core concepts</h2>
+      <p><strong>Clip</strong> — a piece of audio on a track. Clips are editor-only: they are the material a <em>Clip Cue</em> plays; the engine never starts a clip on its own.</p>
+      <p><strong>Track</strong> — a lane. Tracks, colours, mute, solo and groups are editor-only organisation; the game mixes each cue independently.</p>
+      <p><strong>Cue</strong> — the real playback unit. One cue = one sound event, launched by one trigger. Stored as a <code>CUE</code> record.</p>
+      <ul>
+        <li><strong>Clip Cue</strong> — plays every clip whose start lies in the cue's <code>[Start, End)</code> window, at their offsets. Clips at the same offset layer; later ones play in sequence. Loop cues wrap and replay; once cues play through and stop. (Sentinel filename <code>__CLIPS__</code>.)</li>
+        <li><strong>Stop Cue</strong> — empty filename. On launch, fades out and stops looping cues.</li>
+        <li><strong>File Cue</strong> — plays one audio file.</li>
+      </ul>
+      <p><strong>Sound Trigger</strong> — a named one-shot sound fired directly by a track trigger. Stored as a <code>TRIGGER</code> record.</p>
+      <p><strong>Role</strong> — per cue: <code>Normal</code> (0), <code>Music</code> (1, ducked by voices and faded by hold music), <code>Voice</code> (2, ducks music for its length), <code>Hold music</code> (3, ducks under voice but is not faded by the ride-music fade).</p>
+      <p><strong>Hold music zone</strong> — a block-triggered Clip Cue whose clips are played as hold music when the train is stopped in that block.</p>
+      <p><strong>Stall fade-out</strong> — an automatic fade of looping audio when the train stalls, optionally with a mute lock until the player restores audio.</p>
+      <p><strong>Ducking</strong> — a separate multiplier applied on top of each cue's fade gain, so a voice never cancels an in-progress fade.</p>
+      <p><strong>Follow actions</strong> — a per-cue list of cues started when this one finishes (once mode; never on manual stop/fade).</p>
+      <p><strong>Loop crossfade</strong> — a per-cue seconds value (v7). A looping cue with a crossfade &gt; 0 blends two handles across the loop seam.</p>
+    </section>
+
+    <section id="s4">
+      <h2>4 · What plays in-game</h2>
+      <p>The rule: <strong>cues play, clips do not.</strong> A layout like "idle music at 0–20 s, launch at 20 s, station at the end" is authored as clips, then wired to cues the engine launches. If a sound does not fire in-game, check the cue's <strong>trigger</strong>, not the clip.</p>
+    </section>
+
+    <section id="s5">
+      <h2>5 · Launch triggers</h2>
+      <table>
+        <thead><tr><th>Triggered by</th><th>Bin code</th><th>Fires when</th></tr></thead>
+        <tbody>
+          <tr><td>At time</td><td>0</td><td>The timeline clock reaches the cue start (once per crossing)</td></tr>
+          <tr><td>Block state</td><td>1</td><td>A block's state changes to the target — only when <strong>this train</strong> is on that block's section</td></tr>
+          <tr><td>Track trigger</td><td>2</td><td>The matching <code>audio_trigger_&lt;name&gt;</code> trigger is passed (the engine also matches a trigger with the exact name)</td></tr>
+          <tr><td>On audio restore</td><td>3</td><td>The stall fade-out system restores audio (Action key)</td></tr>
+        </tbody>
+      </table>
+      <p>Block matching has two modes (Settings → Blocks → <strong>Scripted coaster</strong>): scripted (custom states from <code>Block.getState()</code>) or normal-mode states plus <code>Section</code> conditions (works without a scripted coaster).</p>
+    </section>
+
+    <section id="s6">
+      <h2>6 · Behaviors</h2>
+      <h3>Ducking</h3>
+      <p>When a <code>Voice</code> cue starts, <code>Music</code> and <code>Hold music</code> cues duck to <code>depth</code> over <code>attack</code>, then recover over <code>release</code> — a separate multiplier on top of each cue's fade.</p>
+      <h3>Hold music</h3>
+      <p>A block-triggered Clip Cue with <strong>Hold music zone</strong> ticked. On the block transition it arms (does not play). When the train is stopped for <strong>Stopped for</strong> seconds, the ride music (<code>Music</code>) fades out over <strong>Ride music fade-out</strong> while the cue's clips fade in over <strong>Hold fade-in</strong>. On departure the hold music fades out over <strong>Hold fade-out</strong>; if <strong>Restore ride music on departure</strong> is ticked, the ride music fades back in. Once-mode completion suppresses follow actions.</p>
+      <h3>Stall fade-out</h3>
+      <p>Armed by a block state; if the train stays below ~0.1 m/s for <strong>Stalled for</strong> seconds, looping audio fades over <strong>Fade-out time</strong>. With <strong>Stay muted until restored</strong>, audio stays muted until the player presses Action in the restore block (optionally playing a restore sound). A disable-fade trigger suppresses the fade for the current ride.</p>
+    </section>
+
+    <section id="s7">
+      <h2>7 · File formats</h2>
+      <h3>7.1 <code>timeline.bin</code> (version 7)</h3>
+      <p>Little-endian. Full layout in <a href="#sa">Appendix A</a>. A 4-byte magic header is followed by the version byte, counts, duration, audio-dir and reserved fields, then clips, cues, sound triggers and the stall-fade-out footer. Version history: v4 adds the audio-dir string; v5 the hold-music timing tail; v6 follow actions + restore cue; v7 the loop crossfade. The engine and the bin must stay in sync — re-export the bin and regenerate the <code>.nlvm</code> together.</p>
+      <h3>7.2 <code>.nl2audio</code> (project)</h3>
+      <p>A zip with <code>project.json</code> plus an <code>audio/</code> folder holding every referenced file ("collect all and save"). Stores duration, fps, tracks, groups, clips, cues, sound triggers, stall-fade-out settings and per-clip volume automation.</p>
+      <h3>7.3 <code>TimelineAudio.nl2script</code></h3>
+      <p>Declares each <code>.wav</code>/<code>.pkf</code> as a <code>&lt;resource&gt;</code> so the engine can load sounds by runtime filename. Regenerate it whenever you add audio.</p>
+      <h3>7.4 <code>.nlvm</code></h3>
+      <p>The compiled engine script (filename must equal the class name). Generated from the editor's built-in engine template, with the class name and the compile-time train index substituted from your settings.</p>
+    </section>
+
+    <section id="s8">
+      <h2>8 · The editor</h2>
+      <h3>Toolbar</h3>
+      <p>New, Stop/Play, zoom (+/−, H+/H−), Fit / Fit Sel, Snap, Settings, Cues, and the <strong>More</strong> menu: Open/Save Project, Import .bin, Add audio, Locate audio folder, Export game file (.bin), Export Audio Package, Generate resource list, Generate game script.</p>
+      <h3>Panels</h3>
+      <ul>
+        <li><strong>Tracks</strong> — add tracks/groups; per-track colour, solo, mute, group, remove.</li>
+        <li><strong>Timeline</strong> — ruler (SMPTE), lanes, clips, cues, playhead; drag to move, drag the right edge to trim, marquee-select, right-click menu.</li>
+        <li><strong>Properties</strong> — edit the selected clip, cue or sound trigger.</li>
+        <li><strong>Sound Triggers</strong> — one-shot sounds fired by track triggers.</li>
+      </ul>
+      <h3>Cue inspector</h3>
+      <p>Name, <strong>Triggered by</strong>, <strong>Cue type</strong> (Clip Cue / Stop Cue / File Cue), Play mode (Once/Loop), Loop crossfade, Follow actions, Role, Volume, Fade time, Start/End, block name+state (block trigger), hold-music fields (block trigger), track trigger name (trigger trigger), and <strong>Export region audio</strong>.</p>
+      <h3>Settings tabs</h3>
+      <ul>
+        <li><strong>Project</strong> — length, train index, script name, timecode frame rate, scripted coaster on/off.</li>
+        <li><strong>Stall fade-out</strong> — arm block/state, stalled time, fade time, mute lock, restore block/state, restore cue, stop-watching trigger, restore sound, disable-fade trigger.</li>
+        <li><strong>Ducking</strong> — depth, fade-in, release.</li>
+        <li><strong>3D audio</strong> — reference distance + rolloff (with a falloff visualiser).</li>
+      </ul>
+      <h3>Keyboard shortcuts</h3>
+      <table>
+        <thead><tr><th>Key</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td>Space</td><td>Play/pause</td></tr>
+          <tr><td>End / Enter</td><td>Stop</td></tr>
+          <tr><td>Home</td><td>Playhead to 0</td></tr>
+          <tr><td>Left / Right</td><td>Playhead to previous/next clip edge</td></tr>
+          <tr><td>Delete</td><td>Delete selection</td></tr>
+          <tr><td>Ctrl+D</td><td>Duplicate clip</td></tr>
+          <tr><td>Ctrl+Z / Ctrl+Y</td><td>Undo / redo</td></tr>
+          <tr><td>Ctrl+wheel</td><td>Zoom</td></tr>
+          <tr><td>Esc</td><td>Deselect / stop</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="s9">
+      <h2>9 · Volume automation</h2>
+      <p>A clip can carry a gain curve (points of <code>{t, gain}</code>, gain 0–200% relative to the clip start). Open it from the clip inspector (<strong>Volume automation → Edit curve</strong>); click to add, drag to move, double-click to delete. The curve is drawn on the clip and drives the preview gain. It is an authoring aid — the game plays the clip's constant <strong>Volume</strong>.</p>
+    </section>
+
+    <section id="s10">
+      <h2>10 · The engine</h2>
+      <p><code>TimelineAudio</code> reads <code>config/timeline.bin</code> in <code>onInit()</code> (parse, load audio, register triggers/blocks, set up stall fade-out), then drives everything from <code>onNextFrame()</code>: advance the timeline clock, fire time/block/trigger/restore cues, run Clip Cue playback, ducking, hold music, and the stall fade-out state machine, and handle loop crossfades.</p>
+      <p>Sounds load through the NL2 resource system; identical filenames are shared. Console lines (e.g. <code>Cue 'Loop1' fired by trigger.</code>) are the primary debugging tool.</p>
+    </section>
+
+    <section id="s11">
+      <h2>11 · Workflows</h2>
+      <h3>Hand-built timeline</h3>
+      <ol>
+        <li>New; set length and train index.</li>
+        <li>Add audio (clips).</li>
+        <li>Add cues, choose the trigger and role.</li>
+        <li>Add a Stop Cue to fade loops on launch.</li>
+        <li>Configure stall fade-out, ducking, 3D audio.</li>
+        <li>Export the .bin, generate the resource list and script, deploy.</li>
+      </ol>
+    </section>
+
+    <section id="s12">
+      <h2>12 · Deployment</h2>
+      <pre><code>YourPark/
+└── RideSync/
+    ├── TimelineAudio.nlvm
+    ├── TimelineAudio.nl2script
+    ├── config/
+    │   └── timeline.bin
+    └── your audio files (.wav / .pkf / .ogg)</code></pre>
+      <ul>
+        <li>The <code>.nlvm</code> filename must equal the class name.</li>
+        <li>Attach the script to the coaster via the <strong><code>.nl2script</code></strong>.</li>
+        <li>Every referenced audio file must be declared as a resource in the <code>.nl2script</code>.</li>
+        <li>Re-export the bin and regenerate the <code>.nlvm</code> together after changes.</li>
+      </ul>
+      <p><strong>Export Audio Package</strong> bundles the bin, the script files and all audio into one zip.</p>
+    </section>
+
+    <section id="s13">
+      <h2>13 · Troubleshooting</h2>
+      <table>
+        <thead><tr><th>Symptom</th><th>Likely cause</th></tr></thead>
+        <tbody>
+          <tr><td>Nothing plays</td><td>Bin and <code>.nlvm</code> out of sync; script not attached via <code>.nl2script</code>; audio not in the folder.</td></tr>
+          <tr><td>One sound never fires</td><td>Wrong trigger name / block / state; trigger not placed; block cue fired by a different train.</td></tr>
+          <tr><td>Loops don't stop</td><td>No Stop Cue, or fade time 0 (instant) vs expected fade.</td></tr>
+          <tr><td>Hold music won't stop</td><td>Train hasn't left the zone; or once/loop play mode not as intended.</td></tr>
+          <tr><td>Export reports missing audio</td><td>Folder moved — use Locate audio folder; anything audible on the timeline is packed.</td></tr>
+          <tr><td>Blank clips after import</td><td>Importing a .bin restores layout only — relink the audio folder.</td></tr>
+          <tr><td>Timeline won't load in-game</td><td>Version mismatch — re-export bin + regenerate <code>.nlvm</code> together.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="sa">
+      <h2>Appendix A · timeline.bin byte reference</h2>
+      <p>Little-endian, version 7.</p>
+      <h3>Header (24 bytes)</h3>
+      <table>
+        <thead><tr><th>Offset</th><th>Size</th><th>Field</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>4</td><td>Magic header</td></tr>
+          <tr><td>4</td><td>1</td><td>Version (7)</td></tr>
+          <tr><td>5</td><td>1</td><td>Track count</td></tr>
+          <tr><td>6</td><td>2</td><td>Clip count (u16)</td></tr>
+          <tr><td>8</td><td>2</td><td>Cue count (u16)</td></tr>
+          <tr><td>10</td><td>2</td><td>Sound-trigger count (u16)</td></tr>
+          <tr><td>12</td><td>2</td><td>Footer length (u16)</td></tr>
+          <tr><td>14</td><td>4</td><td>Duration (f32)</td></tr>
+          <tr><td>18</td><td>2</td><td>Audio-dir length (u16) — v4+</td></tr>
+          <tr><td>20</td><td>4</td><td>Reserved</td></tr>
+        </tbody>
+      </table>
+      <p>Base header is 18 bytes; for v4+ the clip section begins at <code>24 + audioDirLen</code>.</p>
+      <h3>Clip record</h3>
+      <table>
+        <thead><tr><th>Size</th><th>Field</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Track index (u8)</td></tr>
+          <tr><td>4</td><td>Start time (f32)</td></tr>
+          <tr><td>4</td><td>Duration (f32) — v3+; 120 default for older</td></tr>
+          <tr><td>1</td><td>Play mode (0 once, 1 loop)</td></tr>
+          <tr><td>4</td><td>Volume (f32)</td></tr>
+          <tr><td>1+n</td><td>Filename (len + UTF-8)</td></tr>
+        </tbody>
+      </table>
+      <h3>Cue record</h3>
+      <table>
+        <thead><tr><th>Size</th><th>Field</th></tr></thead>
+        <tbody>
+          <tr><td>1+n</td><td>Name (len + UTF-8)</td></tr>
+          <tr><td>1</td><td>Trigger (0 time, 1 block, 2 track trigger, 3 restore)</td></tr>
+          <tr><td>1+n</td><td>Block name (len + UTF-8)</td></tr>
+          <tr><td>2</td><td>State value (u16)</td></tr>
+          <tr><td>1+n</td><td>Track trigger (len + UTF-8)</td></tr>
+          <tr><td>1+n</td><td>Filename (len + UTF-8) — empty = Stop Cue; <code>__CLIPS__</code> = Clip Cue</td></tr>
+          <tr><td>1</td><td>Play mode</td></tr>
+          <tr><td>1</td><td>Role (v2+): 0 normal, 1 music, 2 voice, 3 hold music</td></tr>
+          <tr><td>4+4+4+4</td><td>Volume, fade time, start, end (f32 ×4)</td></tr>
+          <tr><td>1</td><td>Flags (v5+): bit0 hold-music zone, bit1 follow, bit2 hold plays once, bit3 restore ride</td></tr>
+          <tr><td>var</td><td>Hold tail (if bit0): file len + bytes (empty), 4×f32 timings, state u16</td></tr>
+          <tr><td>var</td><td>Follow (v6+, if bit1): len + UTF-8</td></tr>
+          <tr><td>4</td><td>Loop crossfade (f32) — v7+</td></tr>
+        </tbody>
+      </table>
+      <h3>Sound-trigger record</h3>
+      <table>
+        <thead><tr><th>Size</th><th>Field</th></tr></thead>
+        <tbody>
+          <tr><td>1+n</td><td>Name (len + UTF-8)</td></tr>
+          <tr><td>1+n</td><td>Filename (len + UTF-8)</td></tr>
+          <tr><td>1</td><td>Play mode</td></tr>
+          <tr><td>4</td><td>Volume (f32)</td></tr>
+        </tbody>
+      </table>
+      <h3>Footer (length at header offset 12)</h3>
+      <p>Enabled, arm block, arm state, stalled time, fade time, mute lock, restore block, restore state, restore trigger, duck depth/attack/release, confirm sound, disable-fade trigger, audio ref distance/rolloff (v5+), train index, script name, restore cue (v6+), scripted-blocks flag.</p>
+    </section>
+
+    <section id="sb">
+      <h2>Appendix B · Limits &amp; defaults</h2>
+      <h3>Editor</h3>
+      <ul>
+        <li>Timeline length: 10–3600 s. Frame rates: 24/25/30/48/60 (default 30).</li>
+      </ul>
+      <h3>Engine caps</h3>
+      <ul>
+        <li>Clips ≤ 200, cues ≤ 50, sound triggers ≤ 50. The editor warns on export if exceeded.</li>
+      </ul>
+      <h3>Defaults</h3>
+      <ul>
+        <li>Stall fade-out: off; arm block state, stalled 15 s, fade 3.5 s, mute lock on.</li>
+        <li>Ducking: depth 0.75, attack 0.35 s, release 0.8 s.</li>
+        <li>Hold music: stopped 10 s, fade-in 2.5 s, fade-out 10 s, ride fade-out 2 s, state 8.</li>
+        <li>Cue: volume 1.0, fade 0.5 s, once. Clip: volume 1.0, once.</li>
+      </ul>
+    </section>
+
+    <footer style="color:var(--dim);font-size:13px;border-top:1px solid var(--line);margin-top:50px;padding-top:16px">
+      RideSync — Reference Manual. For step-by-step usage see the User Guide.
+    </footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var body=document.body;
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    body.classList.toggle('light');
+    try{ localStorage.setItem('rm.theme', body.classList.contains('light')?'light':'dark'); }catch(e){}
+  });
+  try{ if(localStorage.getItem('rm.theme')==='light') body.classList.add('light'); }catch(e){}
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var map={}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  var secs=[].slice.call(document.querySelectorAll('main section'));
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(en){
+      en.forEach(function(e){ if(e.isIntersecting){ links.forEach(function(a){a.classList.remove('active');}); var a=map[e.target.id]; if(a)a.classList.add('active'); } });
+    },{rootMargin:'-70px 0px -75% 0px',threshold:0});
+    secs.forEach(function(s){ obs.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>

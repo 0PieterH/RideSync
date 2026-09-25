@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RideSync — User Guide</title>
+<style>
+:root{
+  --bg:#f7f8fb; --panel:#ffffff; --panel2:#eef1f7; --line:#dde3ee;
+  --txt:#1b2230; --dim:#5b6678; --accent:#3b6fe0; --accent2:#8b4fe0;
+  --ok:#1f9d6b; --warn:#b7791f; --code:#0f1117; --codetxt:#e6ebf5;
+  --maxw:900px;
+}
+body.dark{
+  --bg:#12151c; --panel:#1a1f29; --panel2:#232a36; --line:#2c3543;
+  --txt:#e7ecf5; --dim:#9aa6b8; --accent:#8fb4ff; --accent2:#c3a6ff;
+  --ok:#5adcb4; --warn:#ffcf7c;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:14px;
+  padding:12px 22px;background:color-mix(in srgb,var(--bg) 85%,transparent);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.topbar .brand{font-weight:800;letter-spacing:.2px}
+.topbar .brand span{color:var(--accent)}
+.topbar .grow{flex:1}
+.tbtn{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--txt);
+  border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+.layout{display:grid;grid-template-columns:280px 1fr;align-items:start;max-width:1300px;margin:0 auto}
+.toc{position:sticky;top:57px;height:calc(100vh - 57px);overflow-y:auto;padding:22px 16px 60px 22px;border-right:1px solid var(--line)}
+.toc h4{margin:0 0 10px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--dim)}
+.toc a{display:block;color:var(--dim);text-decoration:none;font-size:13.5px;padding:6px 10px;border-radius:8px;border-left:2px solid transparent}
+.toc a:hover{color:var(--txt);background:var(--panel)}
+.toc a.active{color:var(--txt);background:var(--panel);border-left-color:var(--accent);font-weight:600}
+.toc a.sub{padding-left:24px;font-size:12.5px}
+main{padding:28px 34px 120px;max-width:calc(var(--maxw) + 68px)}
+h1{font-size:32px;line-height:1.2;margin:6px 0 8px;letter-spacing:-.4px}
+h1+.lede{color:var(--dim);font-size:16px;margin-bottom:26px}
+h2{font-size:23px;margin:48px 0 12px;padding-top:14px;border-top:1px solid var(--line);letter-spacing:-.2px}
+h2:first-of-type{border-top:0;margin-top:18px}
+h3{font-size:18px;margin:28px 0 8px}
+p{margin:12px 0}
+ul,ol{margin:12px 0;padding-left:26px}
+li{margin:6px 0}
+a{color:var(--accent)}
+code{font-family:"Cascadia Code",Consolas,Menlo,monospace;font-size:.88em;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+pre{background:var(--code);color:var(--codetxt);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow:auto}
+pre code{background:none;border:0;padding:0;color:var(--codetxt);font-size:12.5px}
+table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--panel2);font-size:12px;letter-spacing:.4px;text-transform:uppercase}
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:12px 16px;margin:16px 0}
+.note.warn{border-left-color:var(--warn)}
+.note.ok{border-left-color:var(--ok)}
+.note > b:first-child{display:block;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--dim);margin-bottom:2px}
+kbd{background:var(--panel2);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 7px;font:600 12.5px/1.4 inherit}
+.steps{counter-reset:s;list-style:none;padding-left:0}
+.steps>li{position:relative;padding-left:40px;margin:12px 0}
+.steps>li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+footer{color:var(--dim);font-size:13px;border-top:1px solid var(--line);margin-top:50px;padding-top:16px}
+@media (max-width:1000px){.layout{grid-template-columns:1fr}.toc{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:22px 18px 90px}}
+@media print{.topbar,.toc{display:none}.layout{display:block}main{max-width:none;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">RideSync <span>· User Guide</span></div>
+  <div class="grow"></div>
+  <button class="tbtn" id="themeBtn" title="Light / dark">◐</button>
+  <button class="tbtn" onclick="window.print()">Print / PDF</button>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc">
+    <h4>Contents</h4>
+    <a href="#intro">1 · What is this?</a>
+    <a href="#need">2 · What you need</a>
+    <a href="#install">3 · Setup</a>
+    <a href="#quickstart">4 · Quick start</a>
+    <a href="#tour">5 · The editor window</a>
+    <a href="#concepts">6 · Core concepts</a>
+    <a href="#cueprops">7 · Cue properties</a>
+    <a href="#clipprops">8 · Clip &amp; sound-trigger properties</a>
+    <a href="#tasks">9 · Common tasks</a>
+    <a href="#deploy">10 · Export &amp; deploy to NL2</a>
+    <a href="#shortcuts">11 · Keyboard shortcuts</a>
+    <a href="#trouble">12 · Troubleshooting</a>
+    <a href="#glossary">13 · Glossary</a>
+    <a href="#faq">14 · FAQ</a>
+    <a href="#about">15 · About the author</a>
+  </nav>
+
+  <main>
+    <h1>RideSync — User Guide</h1>
+    <p class="lede">A friendly, start-to-finish guide to putting music, voices and sound effects on a NoLimits&nbsp;2 coaster that play <em>on the train</em> as it moves — launch music, station loops, voice lines (screams, narration) and hold music.</p>
+
+    <section id="intro">
+      <h2>1 · What is this?</h2>
+      <p>NoLimits 2 can't play audio timed to a moving train on its own. RideSync adds it:</p>
+      <ul>
+        <li><b>RideSync</b> — a desktop app (looks like a simple audio timeline) where you lay out your sounds and decide when each one plays.</li>
+        <li><b>The Audio Package</b> — the editor exports a small data file plus a script that you drop into your NL2 park folder so the coaster plays your audio.</li>
+      </ul>
+      <p>You do <b>not</b> need to know how to program. If you can drag clips around a timeline and tick a few boxes, you can do this.</p>
+      <div class="note"><b>The one rule to remember</b>“Cues” play in the game — not the clips you see on the timeline. Clips are your raw material; a <b>Cue</b> is what actually plays a sound. You'll build clips first, then wrap them in cues.</div>
+    </section>
+
+    <section id="need">
+      <h2>2 · What you need</h2>
+      <ul>
+        <li>A Windows PC.</li>
+        <li>NoLimits 2 with a coaster you can attach a script to.</li>
+        <li>Your audio files (<code>.wav</code> or <code>.ogg</code>), anywhere on your PC — you point RideSync at them when adding audio.</li>
+        <li>The <b>RideSync</b> app. You can run the ready-made portable app — no installation required.</li>
+      </ul>
+      <p>If you're building the app from source instead, you'll also need Node.js 18 or newer.</p>
+    </section>
+
+    <section id="install">
+      <h2>3 · Setup</h2>
+      <h3>3.1 Start the editor</h3>
+      <p>Double-click the app — the portable <code>.exe</code>, or <code>Launch RideSync.bat</code> in the project folder. The editor opens with an empty timeline.</p>
+      <h3>3.2 Set the basics</h3>
+      <p>Open <b>Settings → Project</b> and check:</p>
+      <table>
+        <tr><th>Setting</th><th>What to put</th></tr>
+        <tr><td>Timeline length</td><td>How long the whole show is (seconds). A little longer than your ride is fine.</td></tr>
+        <tr><td>All trains (each independent)</td><td>Tick to make the audio run independently for <em>every</em> train (one script for the whole coaster). Leave off to target a single train.</td></tr>
+        <tr><td>Train index</td><td>Which single train this audio targets. Use <code>0</code> for the first train. Disabled when "All trains" is ticked.</td></tr>
+        <tr><td>Script name</td><td>Leave as <code>TimelineAudio</code> unless you run a separate script per train.</td></tr>
+        <tr><td>Timecode frame rate</td><td>Cosmetic only — how times are displayed. 30&nbsp;fps is fine.</td></tr>
+      </table>
+      <div class="note ok"><b>Tip</b>If your park uses a scripted coaster (block states), tick <b>Settings → Project → “Scripted coaster”</b>. It's off by default; when off, the app uses NL2's built-in block states.</div>
+    </section>
+
+    <section id="quickstart">
+      <h2>4 · Quick start (5 minutes)</h2>
+      <p>Goal: make a station loop start when the train arrives, and launch music start when the train leaves.</p>
+      <div class="note"><b>Three words first</b>A <b>clip</b> is one sound on the timeline. A <b>cue</b> is the thing that actually plays in-game. A <b>trigger</b> is what tells a cue to start — a track marker, a block state, or a time.</div>
+      <ol class="steps">
+        <li><b>Add your audio.</b> Use the <b>More</b> menu (the “+” button, top right) → <b>Add audio</b>, or drag <code>.wav</code> files onto the timeline. Each file becomes a <b>clip</b>.</li>
+        <li><b>Add a cue.</b> Open the <b>Cues</b> menu (top toolbar) and press <b>+</b>. A new cue appears.</li>
+        <li><b>Choose what triggers it.</b> In the properties panel, set <b>Triggered by</b> to <b>Track trigger</b> and type a name, e.g. <code>station</code>. (In NL2 you'll place a track trigger named <code>audio_trigger_station</code> — the app also matches a trigger with the exact name you typed.)</li>
+        <li><b>Make it a Clip Cue.</b> Set <b>Cue type</b> to <b>Clip Cue</b>. Position the cue's start and end times so its window covers the clips you want it to play.</li>
+        <li><b>Optional: loop it.</b> For background music, choose <b>Play mode → Loop</b>. Leave it as <b>Once</b> for a sound that plays a single time.</li>
+        <li><b>Add a launch cue.</b> Repeat: new cue, <b>Triggered by → Block state</b>, and enter a block name and state (for example <code>Zone1</code> / <code>4</code> — use your coaster's own names). Point it at your launch music.</li>
+        <li><b>If you looped any music (step 6), add a Stop Cue.</b> New cue → <b>Cue type → Stop Cue</b>, same trigger as the launch. This fades out those loops when the next sound takes over — e.g. the station music dipping out as the launch music starts. Set its <b>Fade time</b> (e.g. 3&nbsp;s).</li>
+        <li><b>Export.</b> More menu → <b>Export Audio Package</b>. It bundles the game file, the script, the resource list and all your audio into one <code>.zip</code>.</li>
+        <li><b>Deploy.</b> Unzip it into your park's <code>RideSync</code> folder (see <a href="#deploy">section 10</a>), attach the script, and test in NL2.</li>
+      </ol>
+      <p>That's the whole loop of work: <b>clips → cues → export → deploy → test</b>.</p>
+    </section>
+
+    <section id="tour">
+      <h2>5 · The editor window</h2>
+      <h3>Top toolbar</h3>
+      <table>
+        <tr><th>Button</th><th>What it does</th></tr>
+        <tr><td>New</td><td>Start a blank timeline.</td></tr>
+        <tr><td>Stop / Play</td><td>Preview playback.</td></tr>
+        <tr><td>+ / − / H+ / H−</td><td>Zoom horizontally and change track height.</td></tr>
+        <tr><td>Fit / Fit Sel</td><td>Zoom to show everything / just the selection.</td></tr>
+        <tr><td>Snap</td><td>Snap clips to each other while dragging.</td></tr>
+        <tr><td>Settings</td><td>Project (length, train, scripted coaster), Stall fade-out, Ducking, 3D audio.</td></tr>
+        <tr><td>Cues</td><td>List of all cues; add a cue here.</td></tr>
+        <tr><td>More (+)</td><td>Open/Save project, Add audio, Locate audio folder, Import .bin, and the four export buttons.</td></tr>
+      </table>
+      <h3>Left panel — Tracks</h3>
+      <p>Lanes that hold your clips. Tracks are just for organising your work; they don't change how the game plays audio.</p>
+      <ul>
+        <li><b>Rename</b> — click the track name and type.</li>
+        <li><b>Color</b> — click the colour swatch.</li>
+        <li><b>Mute (M) / Solo (S)</b> — for preview only; they don't change the exported audio.</li>
+        <li><b>Remove</b> — the × on the track (the last track can't be removed).</li>
+        <li><b>Reorder</b> — drag a track up or down.</li>
+        <li><b>Groups</b> — add one with <b>+ Group</b>; drag a track onto a group to assign it, or onto empty space to ungroup. Groups are organisation only.</li>
+      </ul>
+      <p>You can have up to 30 tracks.</p>
+      <h3>Centre — Timeline</h3>
+      <p>Your clips and cues laid out in time. Drag clips to move them; drag their right edge to shorten (trim) them. Drag on empty timeline space to box-select several clips, and Ctrl/Shift-click to add clips to the selection — dragging any selected clip moves them all together.</p>
+      <h3>Right panel — Properties</h3>
+      <p>Shows the settings for whatever you've selected: a clip, a cue, or a sound trigger. This is where most of the work happens.</p>
+      <h3>Sound Triggers</h3>
+      <p>A small list of one-shot sounds that a track trigger can fire directly (e.g. a single scream or horn). Add one with the <b>+</b>; select it to edit its name, file, play mode and volume (see <a href="#clipprops">section 8</a>). Optional — many rides don't need them.</p>
+    </section>
+
+    <section id="concepts">
+      <h2>6 · Core concepts (plain language)</h2>
+      <table>
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td><b>Clip</b></td><td>One piece of audio on the timeline. Doesn't play by itself in-game.</td></tr>
+        <tr><td><b>Track</b></td><td>A lane for clips. Organisation only.</td></tr>
+        <tr><td><b>Cue</b></td><td>The thing that actually plays in-game. One cue = one sound event.</td></tr>
+        <tr><td><b>Clip Cue</b></td><td>A cue that plays the clips inside its time window (layered and/or in sequence).</td></tr>
+        <tr><td><b>Stop Cue</b></td><td>A cue that fades out and stops looping cues (used when the ride begins).</td></tr>
+        <tr><td><b>File Cue</b></td><td>A cue that plays one audio file directly. Set <b>Cue type → File Cue</b>, then pick the sound in the <b>Audio file</b> dropdown.</td></tr>
+        <tr><td><b>Sound Trigger</b></td><td>A named one-shot sound fired by a track trigger.</td></tr>
+        <tr><td><b>Role</b></td><td>How the sound behaves: <b>Normal</b> (no special behaviour), <b>Music</b> (dips under voices and fades out for hold music), <b>Voice</b> (makes the music dip while it plays), <b>Hold music</b> (used by hold zones; dips under voices).</td></tr>
+      </table>
+      <h3>What can trigger a cue?</h3>
+      <ul>
+        <li><b>At time</b> — fires once when the timeline reaches a time.</li>
+        <li><b>Block state</b> — fires when a block changes to a chosen state (e.g. the train leaves the launch).</li>
+        <li><b>Track trigger</b> — fires when the train passes a track trigger you placed in NL2 (name it <code>audio_trigger_<em>name</em></code>).</li>
+        <li><b>On audio restore</b> — fires when the player restores audio in the station (see Stall fade-out).</li>
+      </ul>
+      <div class="note"><b>Block state cues and trains</b>A block-state cue only fires for <em>your</em> train (the Train index you set). Another train setting off the same block won't trigger it.</div>
+    </section>
+
+    <section id="cueprops">
+      <h2>7 · Cue properties (every setting)</h2>
+      <p>Select a cue on the timeline and its settings appear in the right-hand <b>Properties</b> panel. Some fields only appear for certain choices — the block fields show up only when <b>Triggered by</b> is <b>Block state</b>, for example.</p>
+
+      <h3>Identity &amp; timing</h3>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Name</td><td>The cue's label. It's mostly for organising your work, but <b>follow actions</b> refer to cues by name, so keep names unique.</td></tr>
+        <tr><td>Triggered by</td><td>How the cue starts: <b>Timeline time</b>, <b>Block state</b>, <b>Track trigger</b>, or <b>Special event (audio restored)</b>.</td></tr>
+        <tr><td>Cue type</td><td><b>Clip Cue</b> plays the clips inside its window; <b>Stop Cue</b> fades out and stops looping cues; <b>File Cue</b> plays one audio file directly.</td></tr>
+        <tr><td>Audio file <small>(File Cue only)</small></td><td>Which sound the File Cue plays — chosen from the audio already in the project.</td></tr>
+        <tr><td>Start time / End time</td><td>The cue's window on the timeline (<code>HH:MM:SS:FF</code>). For a Clip Cue, the window decides which clips play.</td></tr>
+      </table>
+
+      <h3>Playback</h3>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Play mode</td><td><b>Once</b> plays a single time; <b>Loop</b> repeats until something stops it.</td></tr>
+        <tr><td>Loop crossfade (s)</td><td>Overlaps the end of each loop repetition with the start of the next, so the loop doesn't click. <code>0</code> = off. Loop mode only.</td></tr>
+        <tr><td>Volume</td><td>The cue's output level, 0–100%.</td></tr>
+        <tr><td>Fade time (s)</td><td>How long the cue takes to fade in when it starts and out when it stops. <code>0</code> = instant.</td></tr>
+        <tr><td>Role</td><td><b>Normal</b> — no special behaviour. <b>Music</b> — dips under voices and fades out for hold music. <b>Voice</b> — makes the music dip while it plays. <b>Hold music</b> — used by hold zones; dips under voices.</td></tr>
+        <tr><td>Follow actions</td><td>Cues to start automatically when this one finishes (<b>Once</b> mode). Add one or more by name.</td></tr>
+      </table>
+
+      <h3>Block-state fields <small>(Triggered by → Block state)</small></h3>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Block name</td><td>The NL2 block this cue watches.</td></tr>
+        <tr><td>Block state</td><td>The state that fires the cue — for example the train leaving the launch.</td></tr>
+        <tr><td>Hold music zone</td><td>Tick to make this cue's clips the <b>hold music</b>: played when the train is stopped in this block.</td></tr>
+        <tr><td>Restore ride music on departure</td><td>Fade the ride music back in when the train leaves the zone.</td></tr>
+        <tr><td>Stopped for (s)</td><td>How long the train must be stopped before the ride music fades and the hold music starts.</td></tr>
+        <tr><td>Hold fade-in (s)</td><td>How long the hold music takes to fade in.</td></tr>
+        <tr><td>Hold fade-out (s)</td><td>How long the hold music takes to fade out when the train departs.</td></tr>
+        <tr><td>Ride music fade-out (s)</td><td>How long the ride music takes to fade when the hold music starts.</td></tr>
+        <tr><td>Stopped state</td><td>The block state that means "stopped / waiting" in this block.</td></tr>
+      </table>
+
+      <h3>Track-trigger field <small>(Triggered by → Track trigger)</small></h3>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Track trigger name</td><td>The marker to watch for. In NL2 name it <code>audio_trigger_&lt;name&gt;</code> — or exactly the name you typed here.</td></tr>
+      </table>
+
+      <h3>Export</h3>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Export region audio…</td><td>Saves the cue's audio as a <code>.wav</code>. A Clip Cue is rendered to one mixed file; a File Cue exports its file; a Stop Cue has no audio.</td></tr>
+      </table>
+    </section>
+
+    <section id="clipprops">
+      <h2>8 · Clip &amp; sound-trigger properties</h2>
+
+      <h3>Clip properties</h3>
+      <p>Select a clip on the timeline to edit it in the right-hand <b>Properties</b> panel.</p>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Filename</td><td>The audio file this clip uses. Rename it here to point the clip at a different file (the name must match a file in your audio folder).</td></tr>
+        <tr><td>Audio</td><td>Read-only: the file's duration and whether it's <b>Mono</b> or <b>Stereo</b>.</td></tr>
+        <tr><td>End trim / length</td><td>The clip's played length (<code>HH:MM:SS:FF</code>). Type an exact length, or drag the clip's right edge. <b>Reset</b> restores the full source length.</td></tr>
+        <tr><td>Track</td><td>Which track the clip sits on. Organisation only — it doesn't change the in-game mix.</td></tr>
+        <tr><td>Start time</td><td>The clip's exact start on the timeline (<code>HH:MM:SS:FF</code>).</td></tr>
+        <tr><td>Start in region</td><td>The clip's offset from the start of the cue that contains it. A read-only helper — it shows "not inside any region" when the clip isn't inside a cue.</td></tr>
+        <tr><td>Volume</td><td>The clip's gain, 0–100%.</td></tr>
+        <tr><td>Volume automation</td><td>Open the curve editor to shape the clip's volume over time. This is an authoring aid — the game plays the clip's overall <b>Volume</b> as a constant gain.</td></tr>
+        <tr><td>Play mode</td><td><b>Once</b> plays the clip a single time; <b>Loop</b> repeats the clip while its cue plays.</td></tr>
+        <tr><td>Color</td><td>The clip's colour on the timeline. Cosmetic only.</td></tr>
+      </table>
+
+      <h3>Sound-trigger properties</h3>
+      <p>A <b>sound trigger</b> is a single sound fired the moment its track trigger is hit — no time window, unlike a cue. Add one with the <b>+</b> in the <b>Sound Triggers</b> panel (right side, under Properties), then select it to edit:</p>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Name (trigger)</td><td>The track trigger that fires this sound. In NL2, name the marker <code>audio_trigger_&lt;name&gt;</code> — or exactly the name you type here.</td></tr>
+        <tr><td>Audio filename</td><td>The file to play.</td></tr>
+        <tr><td>Play mode</td><td><b>Once</b> for a one-shot (e.g. a scream); <b>Loop</b> to repeat while active.</td></tr>
+        <tr><td>Volume</td><td>The sound's gain, 0–100%.</td></tr>
+      </table>
+      <div class="note"><b>Sound trigger vs cue</b>A cue is window-based and plays the clips inside its time range. A sound trigger ignores time entirely — it fires one file directly on the trigger. Use sound triggers for one-shots (screams, horns); use cues for anything timed or looping.</div>
+    </section>
+
+    <section id="tasks">
+      <h2>9 · Common tasks</h2>
+
+      <h3>Add audio / create clips</h3>
+      <p>Drag <code>.wav</code>/<code>.ogg</code> files onto the timeline, or use <b>More → Add audio</b>. Clips land where you drop them.</p>
+
+      <h3>Trim a clip</h3>
+      <p>Drag the clip's <b>right edge</b> to make it shorter, or type an exact length in the clip's <b>End trim / length</b> field (format <code>HH:MM:SS:FF</code>). Click <b>Reset</b> to restore the full length.</p>
+
+      <h3>Create a cue</h3>
+      <p>Cues menu → <b>+</b>. In Properties, give it a name, choose <b>Triggered by</b>, and pick a <b>Cue type</b>. A <b>Clip Cue</b> plays every clip whose start falls inside the cue's <b>Start</b>–<b>End</b> window — clips at the same position layer together, later ones play in sequence.</p>
+
+      <h3>Play the audio for every train (independent)</h3>
+      <p>By default a timeline targets one train. To run it for <b>every</b> train independently — each train playing its own copy of the cues as it passes — open <b>Settings → Project</b> and tick <b>All trains (each independent)</b>. The <b>Train index</b> box is then greyed out. One script handles the whole coaster, so you don't need separate scripts per train.</p>
+
+      <h3>Station loops that stop on launch</h3>
+      <ul>
+        <li>One or more <b>Loop</b>-mode cues triggered by a track trigger you place in NL2 (e.g. <code>audio_trigger_station</code>) — these are your station loops.</li>
+        <li>A <b>Stop Cue</b> with the same trigger as the launch, and a <b>Fade time</b> (e.g. 3&nbsp;s).</li>
+      </ul>
+
+      <h3>Hold music (music that plays while the train is stopped)</h3>
+      <p>Make a <b>Clip Cue</b> triggered by a <b>Block state</b> and tick <b>Hold music zone</b>. Put the hold music as clips inside that cue's window. When the train stops there for the set time, the ride music fades out and the hold music fades in; when the train leaves, it fades back out.</p>
+      <ul>
+        <li><b>Stopped for</b> — how long the train must be stopped before hold music starts.</li>
+        <li><b>Hold fade-in / fade-out</b> — the fade times.</li>
+        <li><b>Ride music fade-out</b> — how fast the ride music fades away.</li>
+        <li><b>Restore ride music on departure</b> — tick to bring the ride music back when the train leaves.</li>
+        <li>Set the cue's <b>Play mode</b> to <b>Loop</b> for continuous hold music, or <b>Once</b> for a single announcement.</li>
+      </ul>
+      <div class="note ok"><b>Hear it first</b>There's no in-editor preview for hold music, but you can press <b>Export region audio</b> to render the cue's clips to a WAV and listen to it outside the game.</div>
+
+      <h3>Volume automation (fade a clip in or out)</h3>
+      <p>Select a clip → <b>Volume automation → Edit curve</b>. Click to add points, drag to move, double-click to delete. This shapes the clip's volume over time (an editing aid; the game plays the clip's overall <b>Volume</b>).</p>
+
+      <h3>Ducking (music dips under a voice)</h3>
+      <p>Set a voice cue's <b>Role</b> to <b>Voice</b>. While it plays, all <b>Music</b> cues dip by the amount set in <b>Settings → Ducking</b>, then recover.</p>
+
+      <h3>Stall fade-out (auto fade-out when a train gets stuck)</h3>
+      <p><b>What it's for.</b> While a train is moving, the <b>looping</b> music (station loops, ride music set to Loop) keeps playing until something stops it. If the train stalls — a valley, a mid-course brake, the lift — nothing stops those loops, so they play on and on. Stall fade-out watches for that and fades the audio out, so a stuck train goes quiet. (One-shot sounds end by themselves; it's the loops that would otherwise never stop.)</p>
+      <p><b>In one sentence:</b> after a chosen point on the ride, if the train sits still for a set number of seconds, the audio fades out so a stalled train goes quiet instead of looping forever — and it can stay silent until the player restores it at the station.</p>
+
+      <p><b>Setting it up (the essentials):</b></p>
+      <ol class="steps">
+        <li>Tick <b>Fade out when stalled</b> to turn the feature on.</li>
+        <li>Choose the <b>Arm block</b> and <b>Armed state</b> — the point on the ride where watching begins. "Armed" simply means "start watching from here". A good choice is the block just after the launch, so the station (where the train normally waits) isn't counted as a stall.</li>
+        <li>Set <b>Stalled for</b> — how long the train must be stopped before the fade starts (e.g. 15 s). Brief stops won't trigger it.</li>
+        <li>Set <b>Fade-out time</b> — how slowly the music fades away (e.g. 3.5 s).</li>
+      </ol>
+
+      <p><b>What happens when it triggers.</b> Once armed, the train is watched. If it stays basically stopped for <b>Stalled for</b> seconds, <b>everything currently playing fades out</b> over <b>Fade-out time</b> — not just loops; one-shot sounds fade out too. Then, depending on <b>Stay muted until restored</b>:</p>
+      <ul>
+        <li><b>Ticked (mute lock):</b> the ride goes completely silent. To bring the music back, the train must be stopped in the <b>Restore block</b> (usually the station) and the player presses the <b>Action</b> key near the rear of the train — like an operator resetting the audio.</li>
+        <li><b>Unticked:</b> the loops just stop; the next station trigger restarts the music on its own.</li>
+      </ul>
+
+      <p><b>The remaining settings (all optional):</b></p>
+      <table>
+        <tr><th>Setting</th><th>What it does</th></tr>
+        <tr><td>Arm block / Armed state</td><td>Where watching starts (see step 2 above).</td></tr>
+        <tr><td>Stalled for</td><td>Seconds stopped before the fade begins (see step 3 above).</td></tr>
+        <tr><td>Fade-out time</td><td>How long the fade takes (see step 4 above).</td></tr>
+        <tr><td>Stay muted until restored</td><td>On = silent until the player restores it; off = the loops just stop and restart at the next station.</td></tr>
+        <tr><td>Restore block / Restore state</td><td>Where the Action key restores audio (usually the station / the "in station" state).</td></tr>
+        <tr><td>Restore cue</td><td>A cue started automatically when audio is restored (optional).</td></tr>
+        <tr><td>Restore sound</td><td>A short sound played on restore, e.g. a beep (optional).</td></tr>
+        <tr><td>End-watch trigger</td><td>A track trigger that stops watching for the rest of the ride (optional).</td></tr>
+        <tr><td>Disable-fade trigger</td><td>A track trigger that turns the fade off for the current ride (optional).</td></tr>
+      </table>
+      <div class="note ok"><b>Quickest setup</b>Tick <b>Fade out when stalled</b>; set <b>Arm block</b>/<b>Armed state</b> to the block just after your launch; set <b>Stalled for</b> ≈15&nbsp;s and <b>Fade-out time</b> ≈3.5&nbsp;s. For the "press Action to restore" behaviour, also set <b>Restore block</b> to the station and <b>Restore state</b> to the "in station" state.</div>
+
+      <h3>3D audio distance</h3>
+      <p><b>Settings → 3D audio</b> sets how sound falls off with distance: <b>reference distance</b> and <b>rolloff</b> (defaults 3 and 5).</p>
+
+      <h3>Save and reopen your work</h3>
+      <p><b>More → Save Project</b> saves everything <em>and</em> the audio into one <code>.nl2audio</code> file — a self-contained project. <b>More → Open Project</b> reopens it, no relinking needed.</p>
+
+      <h3>Import a .bin (layout only)</h3>
+      <p><b>More → Import .bin</b> loads a timeline you exported earlier. It restores the layout — clips, cues, triggers and settings — but <em>not</em> the audio, so the clips come back blank. Point the editor at your sounds with <b>More → Locate audio folder</b> and the waveforms return. To reopen a full project <em>with</em> its audio, use <b>Open Project</b> instead.</p>
+    </section>
+
+    <section id="deploy">
+      <h2>10 · Export &amp; deploy to NoLimits 2</h2>
+      <div class="note ok"><b>Easiest way — one button</b>More menu → <b>Export Audio Package</b>. It bundles everything the game needs — the game file, the script, the resource list and all your audio — into a single <code>.zip</code>. Unzip it into your park's RideSync folder and you're ready.</div>
+      <p>Then, in NL2, attach the script and place your triggers (steps below).</p>
+
+      <h3>Exporting the files individually (optional)</h3>
+      <p>You can also export each file on its own — handy when you only changed one thing and want to replace just that file:</p>
+      <table>
+        <tr><th>Export button</th><th>File produced</th><th>What it's for</th></tr>
+        <tr><td>Export game file (.bin)</td><td><code>timeline.bin</code></td><td>The data the game reads (changes whenever you edit the timeline).</td></tr>
+        <tr><td>Generate resource list</td><td><code>TimelineAudio.nl2script</code></td><td>Lists your audio so NL2 loads it (changes when you add or remove audio).</td></tr>
+        <tr><td>Generate game script</td><td><code>TimelineAudio.nlvm</code></td><td>The script that plays the audio.</td></tr>
+      </table>
+
+      <h3>Where the files go</h3>
+      <pre><code>YourPark/
+└── RideSync/
+    ├── TimelineAudio.nlvm
+    ├── TimelineAudio.nl2script
+    ├── config/
+    │   └── timeline.bin
+    └── your audio files (.wav / .ogg)</code></pre>
+      <ol class="steps">
+        <li>Unzip the package (or copy the three files plus your audio) into that folder.</li>
+        <li>In NL2, <b>attach the script to the coaster using the <code>.nl2script</code></b> (not the <code>.nlvm</code>).</li>
+        <li>Place the <b>track triggers</b> your cues expect, named <code>audio_trigger_<em>name</em></code> (e.g. <code>audio_trigger_station</code>). The app also matches a trigger with the exact name you typed.</li>
+        <li>Make sure your <b>block names and states</b> match what you set in the cues.</li>
+        <li>Run the ride and listen.</li>
+      </ol>
+      <div class="note warn"><b>Keep them in sync</b>Whenever you change the timeline, re-export and replace the file(s) in the park — easiest with <b>Export Audio Package</b>. Mixing an old script with a new file is the most common cause of “nothing plays”.</div>
+    </section>
+
+    <section id="shortcuts">
+      <h2>11 · Keyboard shortcuts</h2>
+      <table>
+        <tr><th>Key</th><th>Action</th></tr>
+        <tr><td><kbd>Space</kbd></td><td>Play / pause preview</td></tr>
+        <tr><td><kbd>End</kbd> or <kbd>Enter</kbd></td><td>Stop</td></tr>
+        <tr><td><kbd>Home</kbd></td><td>Jump the playhead to the start</td></tr>
+        <tr><td><kbd>←</kbd> / <kbd>→</kbd></td><td>Jump the playhead to the previous / next clip edge</td></tr>
+        <tr><td><kbd>Delete</kbd></td><td>Delete the selection</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>D</kbd></td><td>Duplicate the selected clip</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Undo / redo</td></tr>
+        <tr><td><kbd>Ctrl</kbd>+wheel</td><td>Zoom</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Deselect / stop</td></tr>
+      </table>
+    </section>
+
+    <section id="trouble">
+      <h2>12 · Troubleshooting</h2>
+      <table>
+        <tr><th>Problem</th><th>Things to check</th></tr>
+        <tr><td><b>No audio in-game at all</b></td>
+            <td>Did you re-export the <code>.bin</code> <em>and</em> regenerate the <code>.nlvm</code> and replace both? Is the script attached via the <code>.nl2script</code>? Are the audio files in the same folder as the script?</td></tr>
+        <tr><td><b>One sound never plays</b></td>
+            <td>Check its cue's <b>Triggered by</b>: is the track trigger named <code>audio_trigger_<em>name</em></code> (or the exact name you typed) and actually placed? Is the block/state reached? For block cues, is the coaster in the matching scripted/normal mode?</td></tr>
+        <tr><td><b>Loops don't stop</b></td>
+            <td>Add a <b>Stop Cue</b> with the same trigger as the event that should stop them, and give it a <b>Fade time</b>. Fade time <code>0</code> means an instant stop.</td></tr>
+        <tr><td><b>Export says audio files are missing</b></td>
+            <td>The audio is in memory but the folder moved. Use <b>Locate audio folder</b> to re-point at your sounds, then export again. Files you can hear on the timeline will be packed.</td></tr>
+        <tr><td><b>Clips are blank / waveforms missing after opening</b></td>
+            <td>Opening a saved project or importing a <code>.bin</code> restores the layout but not the audio — the app doesn't know where the sounds live. More menu → <b>Locate audio folder</b>, pick the folder with your sounds; the waveforms appear on the clips.</td></tr>
+        <tr><td><b>Hold music keeps looping / never stops</b></td>
+            <td>Set the hold cue's <b>Play mode</b> to <b>Once</b> for a single announcement. Make sure the train actually leaves the zone to trigger the fade-out.</td></tr>
+        <tr><td><b>Audio doesn't fade when the train stalls</b></td>
+            <td>Check <b>Settings → Stall fade-out</b> is enabled; that the <b>Arm block</b>/<b>Armed state</b> is actually reached by your train; and that the coaster is in the matching scripted/normal mode. To restore, the train must be stopped in the <b>Restore block</b> and the player presses <b>Action</b>.</td></tr>
+        <tr><td><b>Music doesn't dip under voices</b></td>
+            <td>Give the voice cue <b>Role → Voice</b> and the music cues <b>Role → Music</b>; adjust the dip in <b>Settings → Ducking</b>.</td></tr>
+        <tr><td><b>“Timeline won't load” in NL2</b></td>
+            <td>Version mismatch: re-export the <code>.bin</code> and regenerate the <code>.nlvm</code> together — always keep them a matching pair.</td></tr>
+        <tr><td><b>App won't update / a build fails</b></td>
+            <td>Close the running app before rebuilding — Windows can't overwrite a running program.</td></tr>
+      </table>
+      <div class="note"><b>Reading the game console</b>NL2 prints helpful lines from the script, such as <code>Cue 'Loop1' fired by trigger.</code> or <code>skipped: … (different train)</code>. If a sound doesn't fire, the console usually tells you why.</div>
+    </section>
+
+    <section id="glossary">
+      <h2>13 · Glossary</h2>
+      <table>
+        <tr><th>Term</th><th>Meaning</th></tr>
+        <tr><td>Clip</td><td>A piece of audio on the timeline (not played by itself).</td></tr>
+        <tr><td>Track</td><td>A lane for clips; organisation only.</td></tr>
+        <tr><td>Cue</td><td>An in-game sound event; the unit that plays.</td></tr>
+        <tr><td>Clip Cue</td><td>A cue that plays the clips inside its time window.</td></tr>
+        <tr><td>Stop Cue</td><td>A cue that fades out looping cues.</td></tr>
+        <tr><td>File Cue</td><td>A cue that plays one audio file.</td></tr>
+        <tr><td>Sound Trigger</td><td>A one-shot sound fired directly by a track trigger.</td></tr>
+        <tr><td>Track trigger</td><td>A marker on the coaster track that fires audio; name it <code>audio_trigger_<em>name</em></code> (or the exact name you typed in the editor).</td></tr>
+        <tr><td>Block state</td><td>The condition of a coaster block (e.g. train leaving the launch).</td></tr>
+        <tr><td>Role</td><td>Normal / Music / Voice / Hold music — controls ducking and fades.</td></tr>
+        <tr><td>Hold music</td><td>Music that plays while the train is stopped in a zone.</td></tr>
+        <tr><td>Stall fade-out</td><td>Automatically fades audio if the ride stalls.</td></tr>
+        <tr><td>Ducking</td><td>Lowering music so a voice can be heard.</td></tr>
+      </table>
+    </section>
+
+    <section id="faq">
+      <h2>14 · FAQ</h2>
+      <p><b>Do tracks or groups change the in-game mix?</b><br>No. Tracks and groups are only for organising your work in the editor.</p>
+      <p><b>How many cues can I have?</b><br>Plenty for a normal ride, but keep an eye on the counts: the game engine supports up to 200 clips, 50 cues and 50 sound triggers. The editor warns you if you go over, and any items beyond a limit are dropped from the exported file — they simply won't play.</p>
+      <p><b>Will my project open on another PC?</b><br>Yes — <b>Save Project</b> packs the audio into the <code>.nl2audio</code> file, so it's self-contained.</p>
+      <p><b>How do I update the ride after editing?</b><br>Re-export the <code>.bin</code> and regenerate the <code>.nlvm</code>, then replace both in the park folder.</p>
+    </section>
+
+    <section id="about">
+      <h2>15 · About the author</h2>
+      <p>RideSync is made by <b>Pieter H.</b>, an independent audio engineer working live concerts and studios in France.</p>
+      <p>I've been rebuilding Rock'n'Roller Coaster in NoLimits 2 since the day the sim came out back in 2014 — starting from scratch, no plans, no blueprints, just photos found online. The community kept coming through with real schematics and actual ride audio from Disney, which was incredible and also meant rebuilding everything from the ground up on a better basis more than once. The ride may not be the prettiest, but its complexity — different audio per train, the rock 'n' roll atmosphere, the lighting — is exactly what sparked something in me and bridged my audio-engineering passion with roller coasters for good.</p>
+      <p>The reason RideSync exists is a bit different. Rock'n'Roller Coaster's onboard system is genuinely complex, and the old way of working meant bouncing between tools: open the DAW, export, script it, test in-game, then go back to the DAW to adjust — over and over. I wanted that loop to be straightforward, so I built the tool I wished I had. It also means NL2's built-in audio no longer needs coding skill — RideSync doesn't, and reproducing what it does in a few clicks would take you days by hand.</p>
+      <p>RideSync is built for NoLimits 2, and it will be released publicly — an <code>.exe</code> with no installation required. It'll keep growing from there, with new features and tweaks based on what the community asks for.</p>
+      <p>Questions, ideas, or just want to say hi? Find me on Discord: <b>pieterh_</b></p>
+    </section>
+
+    <footer>RideSync — User Guide. For the full technical reference (file formats, engine internals), see the separate Reference Manual.</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var body=document.body;
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    body.classList.toggle('dark');
+    try{ localStorage.setItem('ug.theme', body.classList.contains('dark')?'dark':'light'); }catch(e){}
+  });
+  try{ if(localStorage.getItem('ug.theme')==='dark') body.classList.add('dark'); }catch(e){}
+  var links=[].slice.call(document.querySelectorAll('#toc a'));
+  var map={}; links.forEach(function(a){ map[a.getAttribute('href').slice(1)]=a; });
+  var secs=[].slice.call(document.querySelectorAll('main section'));
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(en){
+      en.forEach(function(e){ if(e.isIntersecting){ links.forEach(function(a){a.classList.remove('active');}); var a=map[e.target.id]; if(a)a.classList.add('active'); } });
+    },{rootMargin:'-70px 0px -75% 0px',threshold:0});
+    secs.forEach(function(s){ obs.observe(s); });
+  }
+})();
+</script>
+</body>
+</html>
