@@ -5,7 +5,7 @@
 RideSync is a desktop timeline editor that lets you lay out music, voices and sound
 effects on a timeline and have them play on your NoLimits 2 coaster trains exactly
 when you want — launch music, station loops, voice lines, hold music and more.
-No scripting, no juggling a DAW, no re-exporting by hand.
+No scripting, no juggling a DAW, no re-exporting by hand between software for a small change
 
 ---
 
